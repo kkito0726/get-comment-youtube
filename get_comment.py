@@ -50,5 +50,5 @@ if __name__ == '__main__':
   data = get_comments(no, video_id, None)
   df = json2dataframe(data)
   
-  df.to_csv("./csv/output.csv")
+  df.to_csv("./csv/output.csv", encoding="shift-jis")
   print(df)
