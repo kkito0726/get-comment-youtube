@@ -16,12 +16,14 @@ const getVideoTitle = async (channelId) => {
   const res = await fetch(`${URL}?${query_params}`);
   const data = await res.json();
   const items = data.items;
+  const channelName = items[0].snippet.channelTitle;
   const titles = [];
   const videoIds = [];
   items.map((item) => {
     titles.push(item.snippet.title);
     videoIds.push(item.id.videoId);
   });
+  console.log(channelName);
   console.log(titles);
   console.log(videoIds);
 };
