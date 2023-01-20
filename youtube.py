@@ -1,16 +1,28 @@
 import requests
+import time
 import pandas as pd
 
 with open("./API_KEY.txt", "r") as f:
     API_KEY = f.read()
     
 class Youtube:
-  def __init__(self, channel_id, order="date", max_results=50) -> None:
-    self.channel_id = channel_id
+  def __init__(self, channel_url, order="date", max_results=50) -> None:
     params = {
       "key": API_KEY,
       "part": "snippet",
-      "channelId": channel_id,
+      "type": "channel",
+      "q": channel_url
+    }
+    data = requests.get("https://www.googleapis.com/youtube/v3/search", params=params).json()
+    self.channel_id = data['items'][0]['id']['channelId']
+    time.sleep(1)
+    
+    # Channel IDからアップロードされた動画を取得
+    params = {
+      "key": API_KEY,
+      "part": "snippet",
+      "channelId": self.channel_id,
+      "type": "video",
       "order": order,
       "maxResults": max_results
     }
@@ -32,7 +44,7 @@ class Youtube:
     df['videoId'] = videoIds
     df['thumbnail'] = thumbnails
     
-    df.to_csv(f"./csv/{self.name}_video_info.csv", encoding="shift-jis")
+    df.to_csv(f"./csv/{self.name}_video_info.csv")
     return df
   
   def get_comments(self, video_id, max_results=100):
@@ -51,7 +63,7 @@ class Youtube:
     return comments
 
 if __name__ == '__main__':
-  channel_id = input("Channel IDを入力: ")
-  ch = Youtube(channel_id)
+  channel_url = input("ChannelのURLを入力: ")
+  ch = Youtube(channel_url)
   df_videos = ch.output_videos()
   print(df_videos)
