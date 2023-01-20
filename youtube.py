@@ -17,6 +17,22 @@ class Youtube:
     data = res.json()
     self.name = data['items'][0]['snippet']['channelTitle']
     self.videos = data
+    
+  def output_videos(self):
+    items = self.videos['items']
+    titles = [item['snippet']['title'] for item in items]
+    published_time = [item['snippet']['publishTime'] for item in items]
+    videoIds = [item['id']['videoId'] for item in items]
+    thumbnails = [item['snippet']['thumbnails']['high']['url'] for item in items]
+    
+    df = pd.DataFrame()
+    df['title'] = titles
+    df['publishedTime'] = published_time
+    df['videoId'] = videoIds
+    df['thumbnail'] = thumbnails
+    
+    df.to_csv(f"./csv/{self.name}_video_info.csv", encoding="shift-jis")
+    return df
   
   def get_comments(self, video_id, max_results=100):
     params = {
@@ -35,4 +51,5 @@ class Youtube:
 
 if __name__ == '__main__':
   syu = Youtube("UC1l8jsqYmIj1bjCzN43UPfA")
-  print(syu.videos)
+  df_videos = syu.output_videos()
+  print(df_videos)
