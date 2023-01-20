@@ -5,13 +5,14 @@ with open("./API_KEY.txt", "r") as f:
     API_KEY = f.read()
     
 class Youtube:
-  def __init__(self, channel_id, max_results=50) -> None:
+  def __init__(self, channel_id, order="date", max_results=50) -> None:
     self.channel_id = channel_id
     params = {
       "key": API_KEY,
       "part": "snippet",
       "channelId": channel_id,
-      "maxResults": 50
+      "order": order,
+      "maxResults": max_results
     }
     res = requests.get("https://www.googleapis.com/youtube/v3/search", params=params)
     data = res.json()
