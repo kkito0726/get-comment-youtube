@@ -50,6 +50,7 @@ class Youtube:
     return comments
 
 if __name__ == '__main__':
-  syu = Youtube("UC1l8jsqYmIj1bjCzN43UPfA")
-  df_videos = syu.output_videos()
+  channel_id = input("Channel IDを入力: ")
+  ch = Youtube(channel_id)
+  df_videos = ch.output_videos()
   print(df_videos)
